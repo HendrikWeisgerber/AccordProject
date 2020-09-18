@@ -1,0 +1,78 @@
+namespace license
+
+import org.accordproject.cicero.contract.* from https://models.accordproject.org/cicero/contract.cto
+import org.accordproject.cicero.runtime.* from https://models.accordproject.org/cicero/runtime.cto
+
+import org.accordproject.money.MonetaryAmount from https://models.accordproject.org/money.cto
+import org.accordproject.time.Period from https://models.accordproject.org/time@0.2.0.cto
+
+/* Requesting a payment */
+transaction PaymentRequest extends Request {
+  o Boolean status default = true
+}
+
+/* PayOut response */
+transaction PayOut extends Response {
+  o MonetaryAmount amount
+  //o Double? amount
+}
+
+transaction TerminationRequest extends Request {
+  o Boolean status default = true
+}
+transaction TerminationEarliest extends Response {
+  o DateTime EarliestDate
+}
+
+event TerminationObligation extends Obligation{
+  o String description
+}
+
+asset LicenseStatus extends AccordContractState {
+  o Boolean status default = true
+}
+
+/* The template model  */
+asset LicenseAgreementContract extends AccordContract {
+  /* the effective date */
+  o DateTime effectiveDate
+
+  /* licensee */
+  o AccordParty licensee
+  o String licenseeState
+  o String licenseeCountry
+  o String licenseeEntityType
+  o String licenseeAddress
+
+  /* licensor */
+  o AccordParty licensor
+  o String licensorState
+  o String licensorCountry
+  o String licensorEntityType
+  o String licensorAddress
+
+
+  /* descriptions */
+  o String ProductDescription
+  o String ProductName
+
+  /* payment */
+  o PaymentClause paymentClause
+  o Boolean royalty
+  
+  //Termination
+  o TerminationClause terminationClause
+}
+
+asset PaymentClause extends AccordClause {
+	o String amountText
+	o MonetaryAmount amount
+  	//o Double? amount
+	o String paymentProcedure
+}
+
+asset TerminationClause extends AccordClause {
+  	o Period TimeBeforeTermination
+    // o DateTime TerminationDate 
+  	// o Boolean Term
+  }

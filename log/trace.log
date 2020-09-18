@@ -1,0 +1,3 @@
+16:17:16 - [32minfo[39m: Using current directory as template folder
+16:17:16 - [32minfo[39m: Loading a default sample.txt file.
+16:17:16 - [31merror[39m: /home/berlin/Dokumente/AccordProject_0.21.3 is not a valid cicero template. Make sure that package.json exists and that it has a cicero entry.
