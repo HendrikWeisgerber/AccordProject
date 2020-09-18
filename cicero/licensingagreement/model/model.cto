@@ -38,6 +38,10 @@ event TerminationObligation extends Obligation{
   o String description
 }
 
+//event InformationObligation extends Obligation{
+//  o String description
+//}
+
 asset LicenseStatus extends AccordContractState {
   o Boolean status default = true
 }
@@ -72,6 +76,9 @@ asset LicenseAgreementContract extends AccordContract {
   
   //Termination
   o TerminationClause terminationClause
+
+  // information
+  o InformationClause informationclause
 }
 
 asset PaymentClause extends AccordClause {
@@ -82,7 +89,11 @@ asset PaymentClause extends AccordClause {
 }
 
 asset TerminationClause extends AccordClause {
-  	o Period TimeBeforeTermination
-    // o DateTime TerminationDate 
-  	// o Boolean Term
-  }
+  o Period TimeBeforeTermination
+  // o DateTime TerminationDate 
+  // o Boolean Term
+}
+
+asset InformationClause extends AccordClause {
+  o String buyer
+}
