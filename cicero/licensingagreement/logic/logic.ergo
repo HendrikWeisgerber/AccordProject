@@ -59,6 +59,25 @@ contract LicencingAgreement over LicenseAgreementContract state LicenseStatus {
 		};
     return TerminationEarliest{ EarliestDate: addPeriod(now(), clause.TimeBeforeTermination) }
   }
+
+
+clause informationClause(request : InformationRequest) : InformationTransfer emits InformationObligation { //informationClause
+	set state LicenseStatus{
+		stateId: "license.LicenseStatus",
+		  status: request.status
+	};
+    
+    emit InformationObligation{
+			contract: contract,
+			promisor: some(contract.licensee),
+			promisee: some(contract.licensor),
+			deadline: none,
+			buyer: clause.licensee.partyId,
+			description: contract.licensee.partyId ++ " is the person who receives the licens from " ++ contract.licensor.partyId
+		};
+    return InformationTransfer{ buyer: clause.licensee.partyId}
+  }
+
 }
 
 

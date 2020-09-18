@@ -24,6 +24,16 @@ transaction TerminationEarliest extends Response {
   o DateTime EarliestDate
 }
 
+//Requsting all relevant information 
+transaction InformationRequest extends Request{
+  o Boolean status default = true
+}
+
+//handing out all relevant Information
+transaction InformationTransfer extends Response {
+  o String buyer
+}
+
 event TerminationObligation extends Obligation{
   o String description
 }
