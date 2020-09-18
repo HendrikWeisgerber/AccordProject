@@ -1,0 +1,5 @@
+{"$class":"license.PaymentRequest","status":"true",
+"$class":"license.TerminationRequest","status":"true",
+"$class":"license.InformationRequest","status":"true"
+}
+  
