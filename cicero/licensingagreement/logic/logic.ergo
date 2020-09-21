@@ -72,10 +72,10 @@ clause informationClause(request : InformationRequest) : InformationTransfer emi
 			promisor: some(contract.licensee),
 			promisee: some(contract.licensor),
 			deadline: none,	
-			buyer: clause.buyer,		
-			description: contract.licensee.partyId ++ " is the person who receives the licens from " ++ contract.licensor.partyId
+			whoIsBuyer: clause.buyer,		
+			//description: contract.licensee.partyId ++ " is the person who receives the licens from " ++ contract.licensor.partyId
 		};
-    return InformationTransfer{ buyer: clause.buyer}
+    return InformationTransfer {buyerId: clause.buyer}
   }
 
 }

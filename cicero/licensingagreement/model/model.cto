@@ -31,16 +31,17 @@ transaction InformationRequest extends Request{
 
 //handing out all relevant Information
 transaction InformationTransfer extends Response {
-  o String buyer
+  o String buyerId
 }
 
 event TerminationObligation extends Obligation{
   o String description
 }
 
-//event InformationObligation extends Obligation{
-//  o String description
-//}
+event InformationObligation extends Obligation{
+  //o String description
+  o String whoIsBuyer
+}
 
 asset LicenseStatus extends AccordContractState {
   o Boolean status default = true
@@ -78,7 +79,7 @@ asset LicenseAgreementContract extends AccordContract {
   o TerminationClause terminationClause
 
   // information
-  o InformationClause informationclause
+  o InformationClause informationClause
 }
 
 asset PaymentClause extends AccordClause {
@@ -96,4 +97,5 @@ asset TerminationClause extends AccordClause {
 
 asset InformationClause extends AccordClause {
   o String buyer
+
 }
