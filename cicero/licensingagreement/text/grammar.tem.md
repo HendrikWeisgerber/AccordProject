@@ -22,7 +22,7 @@ Termination
 To Terminate the licensee has to terminate {{TimeBeforeTermination}} in advance in order terminate the agreement.
 {{/clause}}
 
-If the licensee terminates today, the agreement will be terminated on   {{% addPeriod(now(), terminationClause.TimeBeforeTermination)  %}}
+
 
 {{#clause informationClause}}
 People who are involved in this contract have the right to request the exiting information. That includes: {{buyer}}, ...
