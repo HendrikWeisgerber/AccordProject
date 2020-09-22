@@ -18,6 +18,6 @@ echo "Deploy contract...."
 node deploy.js licensingagreement@0.20.0.cta sample.md
 
 echo "Submit request...."
-node submitRequest.js request.json 
+# node submitRequest.js request.json 
 
 echo "done."

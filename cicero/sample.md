@@ -26,4 +26,6 @@ Termination
 To Terminate the licensee has to terminate 3 months in advance in order terminate the agreement.
 {{/clause}}
 
-If the licensee terminates today, the agreement will be terminated on   {{%11/18/2020%}}
+{{#clause informationClause}}
+People who are involved in this contract have the right to request the exiting information. That includes: "Hendrik", ...
+{{/clause}}
