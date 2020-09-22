@@ -22,8 +22,6 @@ Termination
 To Terminate the licensee has to terminate {{TimeBeforeTermination}} in advance in order terminate the agreement.
 {{/clause}}
 
-
-
 {{#clause informationClause}}
 People who are involved in this contract have the right to request the exiting information. That includes: {{buyer}}, ...
 {{/clause}}
