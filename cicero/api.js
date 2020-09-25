@@ -12,6 +12,8 @@
  * limitations under the License.
  */
 const FabricClient = require('fabric-client');
+const Gateway = require('fabric-network.Gateway');
+
 const path = require('path');
 const util = require('util');
 
@@ -19,6 +21,7 @@ const config = require('./config.json');
 
 //
 const client = new FabricClient();
+const gateway = new Gateway();
 
 // setup the fabric network
 const channel = client.newChannel(config.chainId);
@@ -26,6 +29,14 @@ const peer = client.newPeer(config.peerHost);
 channel.addPeer(peer);
 const order = client.newOrderer(config.ordererHost);
 channel.addOrderer(order);
+
+//Gateway Example
+const wallet = new FileSystemWallet('./WALLETS/wallet');
+await gateway.connect(ccp, {
+  identity: 'admin',
+  wallet: wallet
+});
+
 
 //
 const storePath = path.join(__dirname, 'hfc-key-store');
@@ -164,4 +175,5 @@ const proposeAndCommitTransaction = tx => FabricClient.newDefaultKeyValueStore({
   });
 module.exports = {
   proposeAndCommitTransaction,
+
 };

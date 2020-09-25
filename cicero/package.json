@@ -12,6 +12,7 @@
         "canvas": "^2.6.1",
         "fabric-ca-client": "^2.2.1",
         "fabric-client": "^1.4.11",
+        "fabric-network": "2.2.2",
         "grpc": "^1.6.0",
         "utf-8-validate": "^5.0.2"
     },
