@@ -12,8 +12,7 @@
  * limitations under the License.
  */
 const FabricClient = require('fabric-client');
-const Gateway = require('fabric-network.Gateway');
-
+const { Gateway, Wallests, FileSystemWallet } = require('fabric-network');
 const path = require('path');
 const util = require('util');
 
@@ -30,18 +29,51 @@ channel.addPeer(peer);
 const order = client.newOrderer(config.ordererHost);
 channel.addOrderer(order);
 
-//Gateway Example
-const wallet = new FileSystemWallet('./WALLETS/wallet');
-await gateway.connect(ccp, {
-  identity: 'admin',
-  wallet: wallet
-});
-
-
-//
-const storePath = path.join(__dirname, 'hfc-key-store');
+//Wallet Path
+const storePath = path.join(__dirname, 'hfc-key-store/user1/');
 console.log(`Store path:${storePath}`);
 let txId = null;
+
+const getContractList = tx => FabricClient.newDefaultKeyValueStore({ path: storePath })
+  .then((stateStore) => {
+    // assign the store to the fabric client
+    client.setStateStore(stateStore);
+    const cryptoSuite = FabricClient.newCryptoSuite();
+    // use the same location for the state store (where the users' certificate are kept)
+    // and the crypto store (where the users' keys are kept)
+    const cryptoStore = FabricClient.newCryptoKeyStore({ path: storePath });
+    cryptoSuite.setCryptoKeyStore(cryptoStore);
+    client.setCryptoSuite(cryptoSuite);
+
+    // get the enrolled user from persistence, this user will sign all requests
+    return client.getUserContext(config.username, true);
+  }).then(async (userFromStore) => {
+    if (userFromStore && userFromStore.isEnrolled()) {
+      console.log(`Successfully loaded ${config.username} from persistence`);
+    } else {
+      throw new Error(`Failed to get ${config.username}.... run registerUser.js`);
+    }
+
+    wallet = await new FileSystemWallet("./hfc-key-store/");
+    // await wallet.import("user1", {"name":"user1","mspid":"Org1MSP"} )
+    // console.log("Wallet: " + wallet.list())
+    await gateway.connect(client, {
+      identity: 'user1',
+      wallet: wallet,
+      discovery: {
+        "enabled": false,
+        "asLocalhost": false }
+    });
+    // console.log(gateway)
+    network = await gateway.getNetwork("channel1");
+    const contracts = await network.getContract("cicero")
+    console.log(contracts.network.contracts)
+    // console.log(network)
+  //   const contracts = chaincodeID => {
+  //     console.log("success cotracts");
+  //     console.log(network);
+  // };
+  });
 
 const proposeAndCommitTransaction = tx => FabricClient.newDefaultKeyValueStore({ path: storePath })
   .then((stateStore) => {
@@ -83,37 +115,37 @@ const proposeAndCommitTransaction = tx => FabricClient.newDefaultKeyValueStore({
     let isProposalGood = false;
     if (proposalResponses && proposalResponses[0].response
             && proposalResponses[0].response.status === 200) {
-      isProposalGood = true;
-      console.log('Transaction proposal was good');
-      console.log(`Response payload: ${proposalResponses[0].response.payload}`);
-    } else {
-      console.log(JSON.stringify(proposalResponses, null, 4));
-      console.error('Transaction proposal was bad');
-    }
-    if (isProposalGood) {
-      console.log(util.format(
-        'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
-        proposalResponses[0].response.status, proposalResponses[0].response.message,
-      ));
-
-      // build up the request for the orderer to have the transaction committed
-      const request = {
-        proposalResponses,
-        proposal,
-      };
-
-        // set the transaction listener and set a timeout of 30 sec
-        // if the transaction did not get committed within the timeout period,
-        // report a TIMEOUT status
-      const transactionIdString = txId.getTransactionID(); // Get the transaction ID string to be used by the event processing
-      const promises = [];
-
-      const sendPromise = channel.sendTransaction(request);
-      promises.push(sendPromise); // we want the send transaction first, so that we know where to check status
-
-      // get an eventhub once the fabric client has a user assigned. The user
-      // is required bacause the event registration must be signed
-      const eventHub = channel.newChannelEventHub(peer);
+              isProposalGood = true;
+              console.log('Transaction proposal was good');
+              console.log(`Response payload: ${proposalResponses[0].response.payload}`);
+            } else {
+              console.log(JSON.stringify(proposalResponses, null, 4));
+              console.error('Transaction proposal was bad');
+            }
+            if (isProposalGood) {
+              console.log(util.format(
+                'Successfully sent Proposal and received ProposalResponse: Status - %s, message - "%s"',
+                proposalResponses[0].response.status, proposalResponses[0].response.message,
+                ));
+                
+                // build up the request for the orderer to have the transaction committed
+                const request = {
+                  proposalResponses,
+                  proposal,
+                };
+                
+                // set the transaction listener and set a timeout of 30 sec
+                // if the transaction did not get committed within the timeout period,
+                // report a TIMEOUT status
+                const transactionIdString = txId.getTransactionID(); // Get the transaction ID string to be used by the event processing
+                const promises = [];
+                
+                const sendPromise = channel.sendTransaction(request);
+                promises.push(sendPromise); // we want the send transaction first, so that we know where to check status
+                
+                // get an eventhub once the fabric client has a user assigned. The user
+                // is required bacause the event registration must be signed
+                const eventHub = channel.newChannelEventHub(peer);
 
       // using resolve the promise so that result status may be processed
       // under the then clause rather than having the catch clause process
@@ -148,7 +180,7 @@ const proposeAndCommitTransaction = tx => FabricClient.newDefaultKeyValueStore({
         eventHub.connect();
       });
       promises.push(txPromise);
-
+      
       return Promise.all(promises);
     }
     console.error('Failed to send Proposal or receive valid response. Response null or status is not 200. exiting...');
@@ -173,7 +205,20 @@ const proposeAndCommitTransaction = tx => FabricClient.newDefaultKeyValueStore({
     console.error(`Failed to invoke successfully :: ${err}`);
     console.error(err);
   });
+  // // connecting Gateway
+  // async function networkConnection() {
+  
+  //   const wallet = await Wallests.newFileSystemWallet(storePath);
+  //   await gateway.connect(client, {
+  //     identity: 'admin',
+  //     wallet: wallet
+  //     });
+  //   const network = await gateway.getNetwork("channel1");
+  //   return network;
+  // };
 module.exports = {
   proposeAndCommitTransaction,
-
+  getContractList,
 };
+
+

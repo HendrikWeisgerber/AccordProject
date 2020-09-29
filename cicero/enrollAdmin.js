@@ -20,7 +20,7 @@ const fabric_client = new Fabric_Client();
 let fabric_ca_client = null;
 let admin_user = null;
 const member_user = null;
-const store_path = path.join(__dirname, 'hfc-key-store');
+const store_path = path.join(__dirname, 'hfc-key-store/admin');
 console.log(` Store path:${store_path}`);
 
 // create the key value store as defined in the fabric-client/config/default.json 'key-value-store' setting
