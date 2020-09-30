@@ -1,0 +1,28 @@
+{
+    "name": "cicero",
+    "version": "2.0.0",
+    "description": "Deploy and execute Accord Project Cicero Smart Legal Contracts to Hyperledger Fabric",
+    "main": "cicero.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "@accordproject/cicero-core": "^0.21.3",
+        "bufferutil": "^4.0.1",
+        "canvas": "^2.6.1",
+        "fabric-ca-client": "^2.2.1",
+        "fabric-client": "^1.4.11",
+        "fabric-network": "2.2.2",
+        "grpc": "^1.6.0",
+        "utf-8-validate": "^5.0.2"
+    },
+    "author": "Accord Project",
+    "license": "Apache-2.0",
+    "keywords": [
+        "Hyperledger",
+        "Fabric",
+        "Cicero",
+        "CLI",
+        "Smart Legal Contracts"
+    ]
+}
